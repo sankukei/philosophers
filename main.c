@@ -29,11 +29,10 @@ void	*routine(void *args)
 	{
 		if (am_i_dead(philo))
 		{
-			//write(1, "a", 1);
 			printf("philo %d has died\n", philo->index);
 			break;
 		}
-		usleep(10);
+		usleep(1);
 	}
 	return (0);
 }
@@ -116,9 +115,6 @@ void	_start_(size_t n_philo, t_args *args, t_mut **mutex, t_philo **philos)
 {
 	init_mutexes(n_philo, mutex);
 	init_philos(n_philo, philos, args, *mutex);
-	write(1, "d\n", 2);
-	printf("%d\n", (*philos)->index);
-	write(1, "d\n", 2);
 	init_threads(n_philo, *philos);
 }
 
