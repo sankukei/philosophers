@@ -12,6 +12,30 @@
 
 #include "header.h"
 
+long	get_ms(void)
+{
+	struct timeval tv;
+
+	if (!gettimeofday(&tv, NULL))
+		return (tv.tv_usec);
+	return (0);
+}
+
+void	monitoring(void)
+{
+
+	struct timeval t0;
+	struct timeval t1;
+	long	time1;
+	long	time2;
+	gettimeofday(&t0, 0);
+	usleep(1);
+	gettimeofday(&t1, 0);
+	long elapsed = (t1.tv_sec-t0.tv_sec) * 1000000 + t1.tv_usec-t0.tv_usec;
+	printf("%ld ", elapsed);
+	//faire une rotine qui check tout les threads
+}
+
 int	am_i_dead(t_philo *philo)
 {
 	int	i;
@@ -24,7 +48,9 @@ int	am_i_dead(t_philo *philo)
 
 void	*routine(void *args)
 {
+	long	time;
 	t_philo *philo = args;
+	monitoring();
 	while (1)
 	{
 		if (am_i_dead(philo))
@@ -44,7 +70,6 @@ int	init_philos(size_t n, t_philo **philos, t_args *args, t_mut *forks)
 	i = 0;
 	t_philo	*tmp;
 	*philos = malloc(n * sizeof(t_philo));
-
 	tmp = *philos;
 	while (i < n)
 	{
@@ -98,6 +123,7 @@ int	init_threads(int n_philo, t_philo *philo)
 	i = 0;
 	while (i < n_philo)
 		pthread_join(thread_index[i++], NULL);
+	free(thread_index);
 	return (1);
 }
 
@@ -160,6 +186,10 @@ int	main(int ac, char **av)
 	{
 		init_args(av, ac, &args);
 		_start_(args->n_philo, args, &mutex, &philos);
+		free(args);
+		free(philos);
+		free(mutex->forks);
+		free(mutex);
 	}
 	else
 	{

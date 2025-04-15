@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <stdio.h>
+# include <sys/time.h>
 
 typedef struct s_mutexes
 {
