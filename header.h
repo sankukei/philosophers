@@ -28,6 +28,7 @@ typedef	struct s_time
 {
 	size_t	start_utime;
 	size_t	start_stime;
+	size_t	elapsed;
 } t_time;
 
 typedef struct s_args

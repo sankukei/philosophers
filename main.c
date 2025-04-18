@@ -21,6 +21,16 @@ long	get_ms(void)
 	return (0);
 }
 
+void	set_time(void)
+{
+	struct	timeval t0;
+	t_time	start;
+
+	gettimeofday(&t0, 0);
+	start.start_utime = t0.tv_usec;
+	start.start_stime = t0.tv_sec;
+}
+
 void	monitoring(void)
 {
 
@@ -34,7 +44,7 @@ void	monitoring(void)
 	//faire une rotine qui check tout les threads
 }
 
-int	am_i_dead(t_philo *philo) // yes
+int	am_i_dead(t_philo *philo)
 {
 	int	i;
 
@@ -48,23 +58,15 @@ int	am_i_dead(t_philo *philo) // yes
 void	*monitoring_routine(void *philos)
 {
 	t_philo *philo;
-	int	i;
 
 	philo = philos;
+	set_time();
 	while (1)
 	{
-		i = 0;
-		while (philo)
-		{
-			if (philo->is_dead == 1)
-			{
-				printf("END");
-				exit(0);
-				// break;
-			}
-			philo++;	
-		}
-		usleep(1000);	
+		start.start_stime = t0.tv_sec;
+		long elapsed = (t1.tv_sec-t0.tv_sec) * 1000000 + t1.tv_usec-t0.tv_usec;
+		philo->time->elapsed = 1;	
+		usleep(1000);
 	}
 	return (0);
 }
@@ -129,16 +131,6 @@ int	init_mutexes(size_t n, t_mut **mutexx)
 		}
 	}
 	return (1);
-}
-
-void	set_time(void)
-{
-	struct	timeval t0;
-	t_time	start;
-
-	gettimeofday(&t0, 0);
-	start.start_utime = t0.tv_usec;
-	start.start_stime = t0.tv_sec;
 }
 
 int	init_threads(int n_philo, t_philo *philo)
