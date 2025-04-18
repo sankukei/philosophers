@@ -26,8 +26,6 @@ void	monitoring(void)
 
 	struct timeval t0;
 	struct timeval t1;
-	long	time1;
-	long	time2;
 	gettimeofday(&t0, 0);
 	usleep(1);
 	gettimeofday(&t1, 0);
@@ -36,26 +34,56 @@ void	monitoring(void)
 	//faire une rotine qui check tout les threads
 }
 
-int	am_i_dead(t_philo *philo)
+int	am_i_dead(t_philo *philo) // yes
 {
 	int	i;
 
+	(void)philo;
 	i = 0;
 	if (i == 0)
 		return (1);
 	return (0);
 }
 
+void	*monitoring_routine(void *philos)
+{
+	t_philo *philo;
+	int	i;
+
+	philo = philos;
+	while (1)
+	{
+		i = 0;
+		while (philo)
+		{
+			if (philo->is_dead == 1)
+			{
+				printf("END");
+				exit(0);
+				// break;
+			}
+			philo++;	
+		}
+		usleep(1000);	
+	}
+	return (0);
+}
+
+void	print_status(int status, int index)
+{
+	if (status == 0)
+		printf("philo %d has died\n", index);
+}
+
 void	*routine(void *args)
 {
-	long	time;
 	t_philo *philo = args;
-	monitoring();
 	while (1)
 	{
 		if (am_i_dead(philo))
 		{
-			printf("philo %d has died\n", philo->index);
+			print_status(0, philo->index);
+			//printf("philo %d has died\n", philo->index);
 			break;
 		}
 		usleep(1);
@@ -63,7 +91,7 @@ void	*routine(void *args)
 	return (0);
 }
 
-int	init_philos(size_t n, t_philo **philos, t_args *args, t_mut *forks)
+t_philo	*init_philos(size_t n, t_philo **philos, t_args *args, t_mut *forks)
 {
 	size_t	i;
 
@@ -76,11 +104,12 @@ int	init_philos(size_t n, t_philo **philos, t_args *args, t_mut *forks)
 		(*philos)->index = i;
 		(*philos)->args = args;
 		(*philos)->forks = forks;
+		(*philos)->is_dead = 0;
 		(*philos)++;
 		i++;
 	}
 	*philos = tmp;
-	return (1);
+	return (*philos);
 }
 
 int	init_mutexes(size_t n, t_mut **mutexx)
@@ -94,7 +123,7 @@ int	init_mutexes(size_t n, t_mut **mutexx)
 	{
 		if (pthread_mutex_init(&(*mutexx)->forks[i++], NULL) != 0)
 		{
-		//	check if function return -1; if so call a function to destroy all other mutexes	
+			//check if function return -1; if so call a function to destroy all other mutexes	
 			write(1, "prankex\n", 8);
 			return (0);
 		}
@@ -102,13 +131,24 @@ int	init_mutexes(size_t n, t_mut **mutexx)
 	return (1);
 }
 
+void	set_time(void)
+{
+	struct	timeval t0;
+	t_time	start;
+
+	gettimeofday(&t0, 0);
+	start.start_utime = t0.tv_usec;
+	start.start_stime = t0.tv_sec;
+}
+
 int	init_threads(int n_philo, t_philo *philo)
 {
 	int	i;
-
 	pthread_t	*thread_index;
+
+	set_time();
 	i = 0;
-	thread_index = malloc(n_philo * sizeof(pthread_t));
+	thread_index = malloc(n_philo * sizeof(pthread_t) + 1);
 	if (!thread_index)
 		return (0);
 	while (i < n_philo)
@@ -120,6 +160,7 @@ int	init_threads(int n_philo, t_philo *philo)
 		}
 		philo++;
 	}
+	//pthread_create(&thread_index[i++], NULL, monitoring_routine, philo);
 	i = 0;
 	while (i < n_philo)
 		pthread_join(thread_index[i++], NULL);
@@ -127,21 +168,21 @@ int	init_threads(int n_philo, t_philo *philo)
 	return (1);
 }
 
-void	init_args(char **av, int ac, t_args **args)
+void	init_args(char **av, int ac, t_args *args)
 {
-	(*args)->n_philo = ft_atoi(av[1]);
-	(*args)->time_to_die = ft_atoi(av[2]);
-	(*args)->time_to_eat = ft_atoi(av[3]);
-	(*args)->time_to_sleep = ft_atoi(av[4]);
+	args->n_philo = ft_atoi(av[1]);
+	args->time_to_die = ft_atoi(av[2]);
+	args->time_to_eat = ft_atoi(av[3]);
+	args->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		(*args)->n_eat = ft_atoi(av[5]);
+		args->n_eat = ft_atoi(av[5]);
 }
 
 void	_start_(size_t n_philo, t_args *args, t_mut **mutex, t_philo **philos)
 {
 	init_mutexes(n_philo, mutex);
-	init_philos(n_philo, philos, args, *mutex);
-	init_threads(n_philo, *philos);
+	t_philo *p = init_philos(n_philo, philos, args, *mutex);
+	init_threads(n_philo, p);
 }
 
 int	check_parsing(char **av)
@@ -177,16 +218,17 @@ void	print_error(int	code)
 
 int	main(int ac, char **av)
 {
-	t_args	*args;
+	t_args	args;
 	t_mut	*mutex;
 	t_philo  *philos;
 
-	args = malloc(sizeof(t_args));
+	// test de mettre sur la stack les structs IE: non malloc
+	// args = malloc(sizeof(t_args));
 	if ((ac == 5 || ac == 6) && check_parsing(av))
 	{
 		init_args(av, ac, &args);
-		_start_(args->n_philo, args, &mutex, &philos);
-		free(args);
+		_start_(args.n_philo, &args, &mutex, &philos);
+		//free(args);
 		free(philos);
 		free(mutex->forks);
 		free(mutex);

@@ -24,6 +24,12 @@ typedef struct s_mutexes
 	pthread_mutex_t	*forks;
 } t_mut;
 
+typedef	struct s_time
+{
+	size_t	start_utime;
+	size_t	start_stime;
+} t_time;
+
 typedef struct s_args
 {
 	size_t	n_philo;
@@ -40,8 +46,11 @@ typedef struct s_philo
 	int	is_thinking;
 	int	is_eating;
 	int	has_eaten;
+	int	is_dead;
 	t_mut	*forks;
 	t_args	*args;
+	t_time	*time;
+	//t_all_philos	*all_philos;
 }	t_philo;
 
 size_t	ft_atoi(const char *str);
