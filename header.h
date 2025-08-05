@@ -48,12 +48,15 @@ typedef struct s_philo
 	int	is_eating;
 	int	has_eaten;
 	int	is_dead;
+        pthread_mutex_t *left_fork;
+        pthread_mutex_t *right_fork;
 	t_mut	*forks;
 	t_args	*args;
 	t_time	*time;
 	//t_all_philos	*all_philos;
 }	t_philo;
 
+# include "prototypes.h"
 size_t	ft_atoi(const char *str);
 
 #endif

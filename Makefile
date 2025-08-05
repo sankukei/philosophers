@@ -18,6 +18,8 @@ FLAGS = -Wall -Wextra -lpthread -g3 -I ./
 
 SRC =	main.c \
 	parsing_utils.c \
+	init.c \
+	routine.c \
 
 OBJS = ${SRC:.c=.o}
 
