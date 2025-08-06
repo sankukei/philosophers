@@ -30,6 +30,7 @@ void	start(size_t n, t_args *args)
         t_philo *philos;
         t_mut   mutex;
 
+        args->start_time = get_time();
         philos = NULL;
 	if (!init_mutexes(n, &mutex))
                 return ;
@@ -49,12 +50,15 @@ void	init_args(char **av, int ac, t_args *args)
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
+        args->simulation_stopped = 0;
+        pthread_mutex_init(&args->stop_mutex, NULL);
 	if (ac == 6)
 		args->n_eat = ft_atoi(av[5]);
 }
 
 int	main(int ac, char **av)
 {
+        long test = get_time();
 	t_args args;
 
 	if ((ac == 5 || ac == 6) && check_parsing(av))

@@ -44,10 +44,13 @@ t_philo *init_philos(size_t n, t_args *args, t_mut *mutex)
 	i = 0;
 	while (i < n)
 	{
+                philos[i].n = n;
 		philos[i].index = i + 1;
 		philos[i].args = args;
                 philos[i].left_fork = &mutex->forks[i];
                 philos[i].right_fork = &mutex->forks[(i + 1) % n];
+                philos[i].last_meal_time = args->start_time;
+                pthread_mutex_init(&philos[i].meal_mutex, NULL);
 		i++;
 	}
         return (philos);
@@ -70,7 +73,7 @@ int	init_threads(size_t n, t_philo *philos)
                 i++;
 	}
 	//monitoring routine
-	//pthread_create(&thread_index[i++], NULL, monitoring_routine, philo);
+	pthread_create(&thread_index[i++], NULL, monitoring_routine, philos);
 	i = 0;
 	while (i < n)
 		pthread_join(thread_index[i++], NULL);

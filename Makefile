@@ -20,6 +20,7 @@ SRC =	main.c \
 	parsing_utils.c \
 	init.c \
 	routine.c \
+	time_utils.c \
 
 OBJS = ${SRC:.c=.o}
 

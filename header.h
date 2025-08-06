@@ -33,11 +33,15 @@ typedef	struct s_time
 
 typedef struct s_args
 {
-	size_t	n_philo;
-	size_t	time_to_die;
-	size_t	time_to_eat;
-	size_t	time_to_sleep;
-	size_t	n_eat;
+	long    n_philo;
+	long    time_to_die;
+	long    time_to_eat;
+        long    time_to_sleep;
+	long    n_eat;
+        int     simulation_stopped;
+        pthread_mutex_t stop_mutex;
+        pthread_mutex_t meal_mutex;
+        long    start_time;
 }	t_args;
 
 typedef struct s_philo
@@ -48,8 +52,11 @@ typedef struct s_philo
 	int	is_eating;
 	int	has_eaten;
 	int	is_dead;
+        size_t     n;
         pthread_mutex_t *left_fork;
         pthread_mutex_t *right_fork;
+        pthread_mutex_t meal_mutex;
+        long    last_meal_time;
 	t_mut	*forks;
 	t_args	*args;
 	t_time	*time;
