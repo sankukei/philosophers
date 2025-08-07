@@ -1,45 +1,45 @@
 #include "header.h"
 
-void    safe_printf(t_philo *philo, const char *message)
+void	safe_printf(t_philo *philo, const char *message)
 {
-        pthread_mutex_lock(&philo->args->printf_mutex);
-        printf("%ld %d %s\n", get_time() - philo->args->start_time, philo->index, message);
-        pthread_mutex_unlock(&philo->args->printf_mutex);
+	pthread_mutex_lock(&philo->args->printf_mutex);
+	printf("%ld %d %s\n", get_time() - philo->args->start_time, philo->index, message);
+	pthread_mutex_unlock(&philo->args->printf_mutex);
 }
 
-int     its_over(t_philo *philo)
+int	its_over(t_philo *philo)
 {
-        pthread_mutex_lock(&philo->args->stop_mutex);
-        if (philo->args->simulation_stopped == 1)
-        {
-                pthread_mutex_unlock(&philo->args->stop_mutex);
-                return (1);
-        }
-        pthread_mutex_unlock(&philo->args->stop_mutex);
-        return (0);
+	pthread_mutex_lock(&philo->args->stop_mutex);
+	if (philo->args->simulation_stopped == 1)
+	{
+		pthread_mutex_unlock(&philo->args->stop_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->args->stop_mutex);
+	return (0);
 }
 
-void    smart_sleep(t_philo *philo, long duration_ms)
+void	smart_sleep(t_philo *philo, long duration_ms)
 {
-        long start;
+	long	start;
 
-        start = get_time();
-        while (!its_over(philo))
+	start = get_time();
+	while (!its_over(philo))
         {
-                if (get_time() - start >= duration_ms)
-                        break;
-                usleep(1000);
-        }
+		if (get_time() - start >= duration_ms)
+			break ;
+		usleep(1000);
+	}
 }
 
-void    eating(t_philo *philo)
+void	eating(t_philo *philo)
 {
-        if (its_over(philo))
-                return ;
-        if (philo->index % 2 == 0)
-        {
-                pthread_mutex_lock(philo->left_fork);
-                safe_printf(philo, "has taken a fork");
+	if (its_over(philo))
+		return ;
+	if (philo->index % 2 == 0)
+	{
+		pthread_mutex_lock(philo->left_fork);
+		safe_printf(philo, "has taken a fork");
                 //printf("%ld %d has taken a fork\n", get_time() - philo->args->start_time, philo->index);
                 pthread_mutex_lock(philo->right_fork);
                 safe_printf(philo, "has taken a fork");
@@ -125,7 +125,7 @@ void    *monitoring_routine(void *arg)
                 i = 0;
                 while(i  < n)
                 {
-                        pthread_mutex_lock(&philos[i].meal_mutex); // set le mutex dans init
+                        pthread_mutex_lock(&philos[i].meal_mutex);
                         now = get_time();
                         if (now - philos[i].last_meal_time > args->time_to_die)
                         {

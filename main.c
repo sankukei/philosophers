@@ -57,6 +57,8 @@ void	init_args(char **av, int ac, t_args *args)
 		args->n_eat = ft_atoi(av[5]);
 }
 
+// TODO implementer le dernier argument n_eat
+
 int	main(int ac, char **av)
 {
         long test = get_time();
@@ -67,5 +69,7 @@ int	main(int ac, char **av)
 		init_args(av, ac, &args);
 		start(args.n_philo, &args);
 	}
+	else
+		printf("parsing error\n");
 	return (EXIT_SUCCESS);
 }
