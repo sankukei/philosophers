@@ -1,12 +1,5 @@
 #include "header.h"
 
-void	safe_printf(t_philo *philo, const char *message)
-{
-	pthread_mutex_lock(&philo->args->printf_mutex);
-	printf("%ld %d %s\n", get_time() - philo->args->start_time, philo->index, message);
-	pthread_mutex_unlock(&philo->args->printf_mutex);
-}
-
 int	its_over(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->args->stop_mutex);
@@ -17,6 +10,17 @@ int	its_over(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->args->stop_mutex);
 	return (0);
+}
+
+void	safe_printf(t_philo *philo, const char *message)
+{
+	if (its_over(philo))
+		return ;
+	pthread_mutex_lock(&philo->args->printf_mutex);
+	if (its_over(philo))
+		return ;
+	printf("%ld %d %s\n", get_time() - philo->args->start_time, philo->index, message);
+	pthread_mutex_unlock(&philo->args->printf_mutex);
 }
 
 void	smart_sleep(t_philo *philo, long duration_ms)
@@ -134,9 +138,9 @@ void    *monitoring_routine(void *arg)
                                 if (!args->simulation_stopped)
                                 {
                                         args->simulation_stopped = 1;
-                                        pthread_mutex_lock(&args->printf_mutex);
+                                        pthread_mutex_lock(&args->printf_death_mutex);
                                         printf("%ld philo %d died\n", now - args->start_time, philos[i].index);
-                                        pthread_mutex_unlock(&args->printf_mutex);
+                                        pthread_mutex_unlock(&args->printf_death_mutex);
                                 }
                                 pthread_mutex_unlock(&args->stop_mutex);
                                 return (NULL);

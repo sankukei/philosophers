@@ -42,6 +42,8 @@ typedef struct s_args
         pthread_mutex_t stop_mutex;
         pthread_mutex_t meal_mutex;
         pthread_mutex_t printf_mutex;
+        pthread_mutex_t printf_death_mutex;
+
         long    start_time;
 }	t_args;
 
