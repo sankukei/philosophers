@@ -41,6 +41,7 @@ typedef struct s_args
         int     simulation_stopped;
         pthread_mutex_t stop_mutex;
         pthread_mutex_t meal_mutex;
+        pthread_mutex_t printf_mutex;
         long    start_time;
 }	t_args;
 
