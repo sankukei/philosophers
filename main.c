@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leothoma <sankukei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/07 18:46:42 by leothoma          #+#    #+#             */
+/*   Updated: 2025/08/07 18:46:42 by leothoma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 int	check_parsing(char **av)
@@ -27,21 +39,19 @@ int	check_parsing(char **av)
 
 void	start(size_t n, t_args *args)
 {
-        t_philo *philos;
-        t_mut   mutex;
+	t_philo	*philos;
+	t_mut	mutex;
 
-        args->start_time = get_time();
-        philos = NULL;
+	args->start_time = get_time();
+	philos = NULL;
 	if (!init_mutexes(n, &mutex))
-                return ;
+		return ;
 	philos = init_philos(n, args, &mutex);
-        if (!philos)
-        {
-                return ;
-        }
+	if (!philos)
+		return ;
 	init_threads(n, philos);
-        free(philos);
-        destroy_mutexes(n, &mutex);
+	free(philos);
+	destroy_mutexes(n, &mutex);
 }
 
 void	init_args(char **av, int ac, t_args *args)
@@ -50,10 +60,10 @@ void	init_args(char **av, int ac, t_args *args)
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
-        args->simulation_stopped = 0;
-        pthread_mutex_init(&args->stop_mutex, NULL);
-        pthread_mutex_init(&args->printf_mutex, NULL); 
-        pthread_mutex_init(&args->printf_death_mutex, NULL); 
+	args->simulation_stopped = 0;
+	pthread_mutex_init(&args->stop_mutex, NULL);
+	pthread_mutex_init(&args->printf_mutex, NULL);
+	pthread_mutex_init(&args->printf_death_mutex, NULL);
 	if (ac == 6)
 		args->n_eat = ft_atoi(av[5]);
 }
@@ -62,8 +72,7 @@ void	init_args(char **av, int ac, t_args *args)
 
 int	main(int ac, char **av)
 {
-        long test = get_time();
-	t_args args;
+	t_args	args;
 
 	if ((ac == 5 || ac == 6) && check_parsing(av))
 	{

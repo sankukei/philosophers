@@ -42,10 +42,10 @@ double	d_atoi(char *str)
 
 size_t	ft_atoi(const char *str)
 {
-	int	i;
-	size_t	res;
-	int	count;
-	int	neg;
+	int			i;
+	size_t		res;
+	int			count;
+	int			neg;
 
 	i = 0;
 	res = 0;

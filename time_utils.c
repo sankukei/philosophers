@@ -1,9 +1,58 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   time_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leothoma <sankukei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/07 18:46:22 by leothoma          #+#    #+#             */
+/*   Updated: 2025/08/07 18:48:43 by leothoma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
-long    get_time(void)
+long	get_time(void)
 {
-        struct timeval tv;
+	struct timeval	tv;
 
-        gettimeofday(&tv, NULL);
-        return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void	smart_sleep(t_philo *philo, long duration_ms)
+{
+	long	start;
+
+	start = get_time();
+	while (!its_over(philo))
+	{
+		if (get_time() - start >= duration_ms)
+			break ;
+		usleep(1000);
+	}
+}
+
+int	its_over(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->args->stop_mutex);
+	if (philo->args->simulation_stopped == 1)
+	{
+		pthread_mutex_unlock(&philo->args->stop_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->args->stop_mutex);
+	return (0);
+}
+
+void	safe_printf(t_philo *philo, const char *message)
+{
+	if (its_over(philo))
+		return ;
+	pthread_mutex_lock(&philo->args->printf_mutex);
+	if (its_over(philo))
+		return ;
+	printf("%ld %d %s\n", get_time() - philo->args->start_time,
+		philo->index, message);
+	pthread_mutex_unlock(&philo->args->printf_mutex);
 }
