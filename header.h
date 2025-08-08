@@ -75,4 +75,5 @@ void	*monitoring_routine(void *args);
 void	smart_sleep(t_philo *philo, long duration_ms);
 int		its_over(t_philo *philo);
 void	safe_printf(t_philo *philo, const char *message, int death);
+void	monitoring_routine_helper(t_philo *philo, t_args *args);
 #endif

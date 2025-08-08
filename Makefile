@@ -21,6 +21,7 @@ SRC =	main.c \
 	init.c \
 	routine.c \
 	time_utils.c \
+	routine_helpers.c \
 
 OBJS = ${SRC:.c=.o}
 
