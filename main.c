@@ -63,7 +63,6 @@ void	init_args(char **av, int ac, t_args *args)
 	args->simulation_stopped = 0;
 	pthread_mutex_init(&args->stop_mutex, NULL);
 	pthread_mutex_init(&args->printf_mutex, NULL);
-	pthread_mutex_init(&args->printf_death_mutex, NULL);
 	if (ac == 6)
 		args->n_eat = ft_atoi(av[5]);
 }

@@ -1,0 +1,1 @@
+quand les valeurs sont faibles, ca peut deadlock a cause de usleep qui n'est pas precis

@@ -42,7 +42,6 @@ typedef struct s_args
 	pthread_mutex_t		stop_mutex;
 	pthread_mutex_t		meal_mutex;
 	pthread_mutex_t		printf_mutex;
-	pthread_mutex_t		printf_death_mutex;
 	long				start_time;
 }	t_args;
 
@@ -73,4 +72,7 @@ int		init_threads(size_t n, t_philo *philos);
 void	*philo_routine(void *args);
 void	destroy_mutexes(size_t n, t_mut *mutex);
 void	*monitoring_routine(void *args);
+void	smart_sleep(t_philo *philo, long duration_ms);
+int		its_over(t_philo *philo);
+void	safe_printf(t_philo *philo, const char *message, int death);
 #endif
