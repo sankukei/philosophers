@@ -54,6 +54,7 @@ typedef struct s_philo
 	int					has_eaten;
 	int					is_dead;
 	size_t				n;
+	long				n_eat;
 	pthread_mutex_t		*left_fork;
 	pthread_mutex_t		*right_fork;
 	pthread_mutex_t		meal_mutex;
@@ -76,4 +77,5 @@ void	smart_sleep(t_philo *philo, long duration_ms);
 int		its_over(t_philo *philo);
 void	safe_printf(t_philo *philo, const char *message, int death);
 void	monitoring_routine_helper(t_philo *philo, t_args *args);
+int		try_end(t_philo *philo, t_args *args);
 #endif

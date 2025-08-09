@@ -61,6 +61,7 @@ t_philo	*init_philos(size_t n, t_args *args, t_mut *mutex)
 		philos[i].left_fork = &mutex->forks[i];
 		philos[i].right_fork = &mutex->forks[(i + 1) % n];
 		philos[i].last_meal_time = args->start_time;
+		philos[i].n_eat = 0;
 		pthread_mutex_init(&philos[i].meal_mutex, NULL);
 		i++;
 	}

@@ -19,11 +19,9 @@ void	eating(t_philo *philo)
 	if (philo->index % 2 == 0)
 	{
 		pthread_mutex_lock(philo->left_fork);
-//		if (!its_over(philo))
-			safe_printf(philo, "has taken a fork", 0);
+		safe_printf(philo, "has taken a fork", 0);
 		pthread_mutex_lock(philo->right_fork);
-//		if (!its_over(philo))
-			safe_printf(philo, "has taken a fork", 0);
+		safe_printf(philo, "has taken a fork", 0);
 	}
 	else
 	{
@@ -36,9 +34,8 @@ void	eating(t_philo *philo)
 	}
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal_time = get_time();
+	philo->n_eat++;
 	pthread_mutex_unlock(&philo->meal_mutex);
-//	if (!its_over(philo))
-//		safe_printf(philo, "is eating", 0);
 	smart_sleep(philo, philo->args->time_to_eat);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
@@ -103,8 +100,17 @@ void	*monitoring_routine(void *arg)
 			pthread_mutex_lock(&philos[i].meal_mutex);
 			now = get_time();
 			if (now - philos[i].last_meal_time > args->time_to_die)
-				return (monitoring_routine_helper(&philos[i], args), NULL);
+			{
+				monitoring_routine_helper(&philos[i], args);
+				pthread_mutex_unlock(&philos[i].meal_mutex);
+				return (NULL);
+			}
 			pthread_mutex_unlock(&philos[i].meal_mutex);
+			if (args->n_eat != -1 && try_end(philos, args))
+			{
+				args->simulation_stopped = 1;
+				return (NULL);
+			}
 		}
 		usleep(1000);
 	}
