@@ -69,8 +69,6 @@ void	init_args(char **av, int ac, t_args *args)
 		args->n_eat = -1;
 }
 
-// TODO implementer le dernier argument n_eat
-
 int	main(int ac, char **av)
 {
 	t_args	args;
