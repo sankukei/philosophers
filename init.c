@@ -87,7 +87,7 @@ int	init_threads(size_t n, t_philo *philos)
 	}
 	pthread_create(&thread_index[i++], NULL, monitoring_routine, philos);
 	i = 0;
-	while (i < n)
+	while (i < n + 1)
 		pthread_join(thread_index[i++], NULL);
 	free(thread_index);
 	return (1);
