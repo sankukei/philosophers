@@ -87,15 +87,13 @@ void	*monitoring_routine(void *arg)
 	t_args	*args;
 	size_t	i;
 	long	now;
-	size_t	n;
 
 	philos = (t_philo *)arg;
 	args = philos[0].args;
-	n = philos[0].n;
 	while (1)
 	{
 		i = -1;
-		while (++i < n)
+		while (++i < philos[0].n)
 		{
 			pthread_mutex_lock(&philos[i].meal_mutex);
 			now = get_time();
@@ -107,10 +105,7 @@ void	*monitoring_routine(void *arg)
 			}
 			pthread_mutex_unlock(&philos[i].meal_mutex);
 			if (args->n_eat != -1 && try_end(philos, args))
-			{
-				args->simulation_stopped = 1;
-				return (NULL);
-			}
+				return (args->simulation_stopped = 1, NULL);
 		}
 		usleep(1000);
 	}

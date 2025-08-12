@@ -75,6 +75,8 @@ int	main(int ac, char **av)
 
 	if ((ac == 5 || ac == 6) && check_parsing(av))
 	{
+		if (ft_atoi(av[1]) > 200)
+			return (printf("philosopers count more than 200\n"));
 		init_args(av, ac, &args);
 		start(args.n_philo, &args);
 	}
