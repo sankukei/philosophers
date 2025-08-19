@@ -62,9 +62,9 @@ typedef struct s_philo
 	t_mut				*forks;
 	t_args				*args;
 	t_time				*time;
-	//t_all_philos	*all_philos;
 }	t_philo;
 
+void	norme_helper(t_philo *philo, t_args *args);
 size_t	ft_atoi(const char *str);
 long	get_time(void);
 t_philo	*init_philos(size_t n, t_args *args, t_mut *mutex);

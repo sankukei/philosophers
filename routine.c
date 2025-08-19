@@ -98,11 +98,7 @@ void	*monitoring_routine(void *arg)
 			pthread_mutex_lock(&philos[i].meal_mutex);
 			now = get_time();
 			if (now - philos[i].last_meal_time > args->time_to_die)
-			{
-				monitoring_routine_helper(&philos[i], args);
-				pthread_mutex_unlock(&philos[i].meal_mutex);
-				return (NULL);
-			}
+				return (norme_helper(&philos[i], args), NULL);
 			pthread_mutex_unlock(&philos[i].meal_mutex);
 			if (args->n_eat != -1 && try_end(philos, args))
 				return (args->simulation_stopped = 1, NULL);

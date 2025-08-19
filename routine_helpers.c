@@ -39,3 +39,9 @@ int	try_end(t_philo *philo, t_args *args)
 	}
 	return (1);
 }
+
+void	norme_helper(t_philo *philo, t_args *args)
+{
+	monitoring_routine_helper(philo, args);
+	pthread_mutex_unlock(&(*philo).meal_mutex);
+}

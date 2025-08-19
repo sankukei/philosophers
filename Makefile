@@ -14,7 +14,7 @@ NAME = philo
 
 COMP = cc
 
-FLAGS = -Wall -Wextra -lpthread -g3 -I ./
+FLAGS = -Wall -Wextra -g3 -I ./
 
 SRC =	main.c \
 	parsing_utils.c \
